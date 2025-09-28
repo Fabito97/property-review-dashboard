@@ -1,0 +1,27 @@
+{
+  "name": "flex-living-assessment",
+  "version": "1.0.0",
+  "description": "Property review dashboard for managers to assess how each property is performing based on guest reviews.",
+  "license": "ISC",
+  "author": "Fabian Muoghalu",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "dev": "nodemon",
+    "build": "tsc",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.2",    
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}

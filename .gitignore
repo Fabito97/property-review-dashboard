@@ -1,0 +1,3 @@
+flex-backend/node_modules
+flex-backend/.env*
+flex-backend/dist/
