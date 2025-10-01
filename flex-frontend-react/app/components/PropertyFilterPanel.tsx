@@ -20,9 +20,7 @@ export default function PropertyFilterPanel({
   const uniqueLocations = Array.from(
     new Set(properties.map((p) => p.location).filter(Boolean))
   );
-  const uniqueTypes = Array.from(
-    new Set(properties.map((p) => p.type).filter(Boolean))
-  );
+  const uniqueTypes = ["guest-to-host", "host-to-guest"]
 
   const filterProperties = useCallback(() => {
     const now = Date.now();
@@ -43,14 +41,14 @@ export default function PropertyFilterPanel({
           case "7d":
             cutoff -= 7 * 24 * 60 * 60 * 1000;
             break;
+          case "30d":
+            cutoff -= 30 * 24 * 60 * 60 * 1000;
+            break;
           case "90d":
             cutoff -= 90 * 24 * 60 * 60 * 1000;
             break;
           case "1y":
             cutoff -= 365 * 24 * 60 * 60 * 1000;
-            break;
-          default:
-            cutoff -= 30 * 24 * 60 * 60 * 1000;
             break;
         }
         dateMatch = created >= cutoff;

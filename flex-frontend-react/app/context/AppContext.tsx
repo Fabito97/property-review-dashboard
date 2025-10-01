@@ -49,6 +49,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
           ratingPercentage: r.rating ? `${Math.round(r.rating * 10)}%` : "N/A",
           createdAt: r.submittedAtIso ?? undefined,
           reviews: [r],
+          type: r.type,
         });
       } else {
         existing.reviews.push(r);

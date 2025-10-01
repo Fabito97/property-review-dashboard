@@ -78,7 +78,7 @@ export default function ReviewsPage() {
                 );
               }}
               onReviewClick={(r) => setSelectedReview(r)}
-              shouldViewMore={false}
+              isRecentReviews={false}
             />
 
             {totalPages > 1 && (

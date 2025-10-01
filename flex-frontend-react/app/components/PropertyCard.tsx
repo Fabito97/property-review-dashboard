@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Star,
   TrendingUp,
@@ -7,8 +7,10 @@ import {
   MapPin,
   Eye,
   ArrowBigRight,
+  ArrowRightFromLine,
 } from "lucide-react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
+import ReviewsModal from "~/components/ReviewModal";
 import type { Property } from "~/types/property";
 
 interface PropertyCardProps {
@@ -17,6 +19,8 @@ interface PropertyCardProps {
 
 const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [showReviewsModal, setShowReviewsModal] = useState(false);
   const reviews = property.reviews || [];
 
   const guestReviews = reviews.filter(
@@ -35,7 +39,11 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const ratingPercentage =
     averageRating != null ? `${Math.round((averageRating / 5) * 100)}%` : "—";
 
-  const reviewCount = guestReviews.length;
+  // Fallback to total reviews array length, then to guestReviews length as a last resort.
+  const reviewCount =
+    property.reviewCount ??
+    (Array.isArray(reviews) ? reviews.length : undefined) ??
+    guestReviews.length;
 
   const negativeReviews = reviews.filter(
     (r) => !r.publicReview && r.rating != null && r.rating <= 2
@@ -49,6 +57,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
     return <Minus className="h-4 w-4 text-gray-400" />;
   };
 
+
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
       <div className="p-6">
@@ -60,7 +69,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
                 {property.name}
               </h3>
               <span className="px-2 py-1 text-xs font-medium rounded-lg bg-green-300 text-gray-800">
-                { (Number(property.id) % 2) === 0 ? "Avail" : "occupied"}
+                {Number(property.id) % 2 === 0 ? "Avail" : "occupied"}
               </span>
             </div>
             <div className="flex items-center text-sm text-gray-600 mb-2">
@@ -91,22 +100,26 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600">Reviews</p>
-                <p className="text-lg font-semibold">{reviewCount}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-lg font-semibold">{reviewCount}</p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      const isAdmin = location.pathname.includes("/");
+                      if (isAdmin) {
+                        setShowReviewsModal(true);
+                      } else {
+                        navigate(`/properties/${property.id}`);
+                      }
+                    }}
+                    aria-label="Open reviews"
+                    className="p-1 rounded hover:shadow bg-blue-100 ml-2 cursor-pointer hover"
+                  >
+                    <ArrowRightFromLine className="h-4 w-4 text-gray-500" />
+                  </button>
+                </div>
               </div>
-              <span className="mr-3">
-
-              {getTrendIcon()}
-              </span>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  navigate(`/properties/${property.id}`);
-                }}
-                className="cursor-pointer ml-auto xt-sm px-3 py-1 rounded-md bg-blue-100 text-gray-700 hover:bg-blue-200 flex items-center gap-1 text-xs"
-              >
-                <ArrowBigRight className="h-3 w-3 text-blue-400" />
-                View
-              </button>
+              <span className="mr-3">{getTrendIcon()}</span>
             </div>
           </div>
         </div>
@@ -134,9 +147,17 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             </p>
           </div>
         )}
+      {showReviewsModal && (
+        <ReviewsModal
+          property={property}
+          onClose={() => setShowReviewsModal(false)}
+          onToggleApproval={() => { /* placeholder - can be wired to context */ }}
+        />
+      )}
       </div>
     </div>
   );
 };
 
 export default PropertyCard;
+

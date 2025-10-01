@@ -9,7 +9,7 @@ type ReviewTableProps = {
   onApproveToggle: (id: string | number, approved: boolean) => void;
   onReviewClick: (review: Review) => void;
   onFlag?: (id: string | number) => void;
-  shouldViewMore?: boolean;
+  isRecentReviews?: boolean;
 };
 
 export default function ReviewTable({
@@ -17,13 +17,12 @@ export default function ReviewTable({
   onApproveToggle,
   onReviewClick,
   onFlag,
-  shouldViewMore = true,
+  isRecentReviews = true,
 }: ReviewTableProps) {
   const navigate = useNavigate();
 
   return (
     <div className="bg-white shadow-md rounded-md p-6 w-full overflow-x-auto border border-gray-100">
-
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-b-gray-200 text-gray-400">
@@ -34,7 +33,9 @@ export default function ReviewTable({
             <th className="text-left py-2 px-3 font-medium">Review</th>
             <th className="text-left py-2 px-3 font-medium">Submitted</th>
             <th className="text-left py-2 px-3 font-medium">Status</th>
-            <th className="text-left py-2 px-3 font-medium">Actions</th>
+            {!isRecentReviews && (
+              <th className="text-left py-2 px-3 font-medium">Actions</th>
+            )}
           </tr>
         </thead>
         <tbody>
@@ -71,70 +72,72 @@ export default function ReviewTable({
                   </span>
                 )}
               </td>
-              <td className="py-2 px-3 flex justify-center mt-1">
-                <Menu as="div" className="absolute inline-block text-left">
-                  <Menu.Button
-                    onClick={(e) => e.stopPropagation()}
-                    className="text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
-                  >
-                    ⋯
-                  </Menu.Button>
-                  <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                    <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onApproveToggle(r.id, !r.isApproved);
-                            }}
-                            className={`block w-full text-left px-4 py-2 text-sm ${
-                              active ? "bg-gray-100" : ""
-                            }`}
-                          >
-                            {r.isApproved ? "Unapprove" : "Approve"}
-                          </button>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onFlag?.(r.id);
-                            }}
-                            className={`block w-full text-left px-4 py-2 text-sm text-red-600 ${
-                              active ? "bg-red-50" : ""
-                            }`}
-                          >
-                            Flag Review
-                          </button>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onReviewClick(r);
-                            }}
-                            className={`block w-full text-left px-4 py-2 text-sm ${
-                              active ? "bg-gray-100" : ""
-                            }`}
-                          >
-                            View Details
-                          </button>
-                        )}
-                      </Menu.Item>
-                    </div>
-                  </Menu.Items>
-                </Menu>
-              </td>
+              {!isRecentReviews && (
+                <td className="py-2 px-3 flex justify-center mt-1">
+                  <Menu as="div" className="absolute inline-block text-left">
+                    <Menu.Button
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                    >
+                      ⋯
+                    </Menu.Button>
+                    <Menu.Items className="absolute right-0 mt-2 w-40 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                      <div className="py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onApproveToggle(r.id, !r.isApproved);
+                              }}
+                              className={`block w-full text-left px-4 py-2 text-sm ${
+                                active ? "bg-gray-100" : ""
+                              }`}
+                            >
+                              {r.isApproved ? "Unapprove" : "Approve"}
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onFlag?.(r.id);
+                              }}
+                              className={`block w-full text-left px-4 py-2 text-sm text-red-600 ${
+                                active ? "bg-red-50" : ""
+                              }`}
+                            >
+                              Flag Review
+                            </button>
+                          )}
+                        </Menu.Item>
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onReviewClick(r);
+                              }}
+                              className={`block w-full text-left px-4 py-2 text-sm ${
+                                active ? "bg-gray-100" : ""
+                              }`}
+                            >
+                              View Details
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    </Menu.Items>
+                  </Menu>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
       </table>
-      {shouldViewMore && (
+      {isRecentReviews && (
         <div className="mt-13 text-right flex justify-center my-10">
           <button
             onClick={() => navigate("/reviews")}
