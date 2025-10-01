@@ -1,87 +1,74 @@
-# Welcome to React Router!
+# Flex Frontend (React + React Router)
 
-A modern, production-ready template for building full-stack React applications using React Router.
+This folder contains the React frontend for the Property Reviews Dashboard. The project uses React Router's dev/build/serve tooling (Vite under the hood) and TypeScript.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/remix-run/react-router-templates/tree/main/default)
+Quick overview
 
-## Features
+- Dev server: `npm run dev` (uses `@react-router/dev`)
+- Build: `npm run build` (uses `react-router build`)
+- Start/Serve (production server): `npm run start` (uses `@react-router/serve`)
+- Type generation / typecheck: `npm run typecheck`
 
-- 🚀 Server-side rendering
-- ⚡️ Hot Module Replacement (HMR)
-- 📦 Asset bundling and optimization
-- 🔄 Data loading and mutations
-- 🔒 TypeScript by default
-- 🎉 TailwindCSS for styling
-- 📖 [React Router docs](https://reactrouter.com/)
+Getting started (Windows / PowerShell)
 
-## Getting Started
+1. Install dependencies
 
-### Installation
-
-Install the dependencies:
-
-```bash
+```powershell
 npm install
 ```
 
-### Development
+2. Start development server
 
-Start the development server with HMR:
-
-```bash
+```powershell
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
+This uses `@react-router/dev`. Open the URL shown in the terminal (commonly `http://localhost:5173`).
 
-## Building for Production
+3. Build for production
 
-Create a production build:
-
-```bash
+```powershell
 npm run build
 ```
 
-## Deployment
+This runs `react-router build` and produces server + client artifacts under `build/`.
 
-### Docker Deployment
+4. Serve the production build locally
 
-To build and run using Docker:
-
-```bash
-docker build -t my-app .
-
-# Run the container
-docker run -p 3000:3000 my-app
+```powershell
+npm run start
 ```
 
-The containerized application can be deployed to any platform that supports Docker, including:
+Environment variables
 
-- AWS ECS
-- Google Cloud Run
-- Azure Container Apps
-- Digital Ocean App Platform
-- Fly.io
-- Railway
+- The frontend reads `VITE_API_BASE_URL` (via `import.meta.env.VITE_API_BASE_URL`) to configure the API base URL. If not set it defaults to `http://localhost:3001/api` in the axios client: `app/lib/api/axios.ts`.
+- Add a `.env` file at the project root (this file is gitignored). Example:
 
-### DIY Deployment
-
-If you're familiar with deploying Node applications, the built-in app server is production-ready.
-
-Make sure to deploy the output of `npm run build`
-
-```
-├── package.json
-├── package-lock.json (or pnpm-lock.yaml, or bun.lockb)
-├── build/
-│   ├── client/    # Static assets
-│   └── server/    # Server-side code
+```env
+# API base (change if backend runs at a different host/port)
+VITE_API_BASE_URL=http://localhost:3001/api
 ```
 
-## Styling
+Key files
 
-This template comes with [Tailwind CSS](https://tailwindcss.com/) already configured for a simple default starting experience. You can use whatever CSS framework you prefer.
+- `app/root.tsx` — React entry / router
+- `app/lib/api/axios.ts` — axios instance and API_BASE_URL (search for `VITE_API_BASE_URL`)
+- `vite.config.ts` — Vite/react-router configuration
 
----
+Scripts (from package.json)
 
-Built with ❤️ using React Router.
+- `dev` — start the dev server (`react-router dev`)
+- `build` — build server + client (`react-router build`)
+- `start` — serve the built server (`react-router-serve ./build/server/index.js`)
+- `typecheck` — run react-router type generation and TypeScript check
+
+Troubleshooting & notes
+
+- If the app cannot reach the backend, ensure `VITE_API_BASE_URL` is set and reachable.
+- If you change env vars, restart the dev server because Vite injects import.meta.env at startup.
+- If you see TypeScript errors after dependency changes, restart your editor's TypeScript server.
+- The project uses Tailwind via `@tailwindcss/vite`; if you change Tailwind config, restart the dev server.
+
+Advanced: deploying the built server
+
+The `react-router build` produces a `build/server` folder which can be started with `node build/server/index.js` (or via `npm run start` which wraps `react-router-serve`). Containerize the app by building and copying the `build` output into a small Node image.

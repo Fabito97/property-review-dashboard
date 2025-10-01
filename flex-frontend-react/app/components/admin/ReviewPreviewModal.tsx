@@ -2,7 +2,7 @@
 import { Dialog } from '@headlessui/react';
 import { useState } from 'react';
 import type { Review } from '~/types/review';
-import ReviewCard from './ReviewCard';
+import ReviewCard from './ReviewPreviewCard';
 
 type ReviewPreviewModalProps = {
   review: Review | null;

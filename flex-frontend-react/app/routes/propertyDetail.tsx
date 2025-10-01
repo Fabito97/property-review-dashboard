@@ -13,6 +13,7 @@ import Skeleton from "~/components/ui/SkeletonLoader";
 import { useAppData } from "~/context/AppContext";
 import { formatDate } from "~/lib/utils";
 import { apiRequest } from "~/lib/api/axios";
+import ApprovedReviews from "~/components/property/ApproovedReviews";
 
 export default function PropertyPage() {
   const { id } = useParams();
@@ -28,10 +29,10 @@ export default function PropertyPage() {
         const res = await apiRequest<any>("get", `/properties/${id}/hostaway`);
         const data: Property = res.data.data;
 
-        // ✅ Filter reviews from context
+        // Filter reviews from context
         const allReviews = reviewData?.reviews || [];
         const filtered = allReviews.filter(
-          (r) => r.listingId === id
+          (r) => r.listingId === id && r.isApproved
         );
 
         setProperty({ ...data, reviews: filtered });
@@ -44,23 +45,23 @@ export default function PropertyPage() {
     };
     if (id) fetchProperty();
   }, [id, reviewData]);
-  console.log("Properties from me:", property)
+  console.log("Properties from me:", property);
 
   if (isLoading) {
     return (
-      <div className="bg-[#f4f4f4] h-screen">
+      <div className="bg-[#fff] h-screen py-10">
         <Navbar />
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 -screen">
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {Array.from({ length: 4 }).map((_, i) => (
-                <Skeleton key={i} className="h-48 w-full rounded-md" />
+                <Skeleton key={i} className="h-40 sm:h-48 w-full rounded-md" />
               ))}
             </div>
-            <Skeleton className="h-10 w-1/3" />
-            <Skeleton className="h-20 w-full" />
-            <Skeleton className="h-48 w-full" />
-            <Skeleton className="h-32 w-full" />
+            <Skeleton className="h-8 w-2/3 sm:w-1/3" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-40 w-full" />
+            <Skeleton className="h-28 w-full" />
           </div>
         </div>
         <Footer />
@@ -69,33 +70,39 @@ export default function PropertyPage() {
   }
 
   return (
-    <div className="bg-[#f4f4f4]">
+    <div className="bg-[#fffdf4]">
       <Navbar />
 
-      <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="md:max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 h-full">
         <PropertyShowCase images={property?.images} />
       </div>
 
-      <main className="max-w-6xl mx-auto px-10 py-8 flex md:flex-row flex-col gap-8">
-        <div className="md:w-[70%]">
+      <main className="max-w-6xl mx-auto px-10 sm:px-6 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8">
+        <div className="w-full md:w-[70%]">
           {/* About */}
-          <section className="mb-8 bg-white p-10 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">About Details</h2>
-            <p className="text-[#333] line-clamp-3">{About.slice(100)}</p>
+          <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
+            <h2 className="text-lg sm:text-xl font-semibold mb-3">
+              About Details
+            </h2>
+            <p className="text-[#333] text-sm sm:text-base line-clamp-3">
+              {About.slice(100)}
+            </p>
             <button className="text-green-700 text-sm mt-2 cursor-pointer">
               Read more
             </button>
           </section>
 
           {/* Amenities — left as-is for now */}
-          <section className="mb-8 bg-white p-10 rounded-xl shadow-lg">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-semibold mb-4">Amenities</h2>
-              <button className="text-gray-700 text-sm cursor-pointer p-2 px-5 border border-gray-500 rounded-md hover:bg-gray-200">
-                View all
+          <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
+            <div className="flex justify-between items-center mb-3">
+              <h2 className="text-lg sm:text-xl font-semibold mb-0">
+                Amenities
+              </h2>
+              <button className="text-gray-700 text-xs cursor-pointer p-2 px-4 border border-gray-400 rounded-md hover:bg-gray-100">
+                View all Amenities
               </button>
             </div>
-            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-gray-700">
+            <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-gray-700 text-sm">
               <li>Kitchen</li>
               <li>Wifi</li>
               <li>Washer</li>
@@ -111,31 +118,18 @@ export default function PropertyPage() {
           <StayPolicy />
 
           {/* Approved Reviews */}
-          <section className="mb-8 bg-white p-10 rounded-xl shadow-lg">
-            <h2 className="text-xl font-semibold mb-4">Guest Reviews</h2>
-            {approvedReviews.length === 0 ? (
-              <p className="text-gray-500">No approved reviews yet.</p>
-            ) : (
-              <ul className="space-y-6">
-                {approvedReviews?.map((review) => (
-                  <li key={review.id} className="border-b pb-4">
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>{review.guestName}</strong> — {formatDate(review.submittedAt)}
-                    </p>
-                    <p className="text-gray-800 text-sm">{review.publicReview}</p>
-                    {review.rating && (
-                      <p className="text-yellow-600 text-sm mt-1">
-                        Rating: {review.rating}/10
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
         </div>
 
-        <BookingBox />
+        {/* Booking box*/}
+        <div className="w-full md:w-[30%]">
+          <div className="md:sticky md:top-24">
+            <div className="flex flex-col md:flex-col-reverse gap-8">
+
+            <ApprovedReviews approvedReviews={approvedReviews} />
+            <BookingBox />
+            </div>
+          </div>
+        </div>
       </main>
 
       <Footer />

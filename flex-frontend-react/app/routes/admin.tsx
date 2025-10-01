@@ -11,12 +11,8 @@ import { useEffect, useState, useMemo } from "react";
 import type { Review } from "~/types/review";
 
 export default function Home() {
-  const {
-    properties,
-    reviewData,
-    loadingReviews,
-    loadingProperties,
-  } = useAppData();
+  const { properties, reviewData, loadingReviews, loadingProperties } =
+    useAppData();
 
   const sourceData = reviewData?.reviews ?? [];
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
@@ -28,14 +24,17 @@ export default function Home() {
 
   const recentReviews = useMemo(() => {
     return [...sourceData]
-      .sort((a, b) => new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime())
+      .sort(
+        (a, b) =>
+          new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+      )
       .slice(0, 5);
   }, [sourceData]);
 
   const topRatedProperties = [...properties]
-  .filter((p) => p.overallRating != null && p.overallRating >= 4)
-  .sort((a, b) => (b.overallRating ?? 0) - (a.overallRating ?? 0))
-  .slice(0, 5); // top 5
+    .filter((p) => p.overallRating != null && p.overallRating >= 4)
+    .sort((a, b) => (b.overallRating ?? 0) - (a.overallRating ?? 0))
+    .slice(0, 5); // top 5
 
   const handleApproveToggle = (id: string | number, approved: boolean) => {
     const updated = filteredReviews.map((r) =>
@@ -56,26 +55,35 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <OverviewStats loading={loadingReviews} summary={reviewData?.summary} />
+            <OverviewStats
+              loading={loadingReviews}
+              summary={reviewData?.summary}
+            />
           )}
         </section>
 
         {/* Property Grid */}
         <section className="mt-20">
-          {loadingProperties ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 3 }).map((_, i) => (
-                <Skeleton key={i} className="h-40 w-full" />
-              ))}
-            </div>
+          {loadingProperties || properties.length === 0 ? (
+            <>
+              <h2 className="text-2xl font-bold mb-4">Too Rated Properties</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-40 w-full" />
+                ))}
+              </div>
+            </>
           ) : (
-            <PropertyGrid properties={topRatedProperties} reviews={filteredReviews} />
+            <PropertyGrid
+              properties={topRatedProperties}
+              reviews={filteredReviews}
+            />
           )}
         </section>
 
         {/* Filter Panel */}
-        <section className="mt-20">   
-          <h2 className="text-2xl font-bold mb-4">Recent Reviews</h2>      
+        <section className="mt-20">
+          <h2 className="text-2xl font-bold mb-4">Recent Reviews</h2>
           {/* Recent Review Table */}
           {loadingReviews ? (
             <div className="space-y-4">
