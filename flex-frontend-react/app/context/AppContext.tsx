@@ -10,8 +10,8 @@ type AppContextType = {
   properties: Property[];
   loadingProperties: boolean;
   loadingReviews: boolean;
-  fetchProperties: () => Promise<void>; // optional if you want manual refresh
-  fetchReviews: () => Promise<void>; // optional if you want manual refresh
+  fetchProperties: () => Promise<void>; 
+  fetchReviews: () => Promise<void>; 
 };
 
 

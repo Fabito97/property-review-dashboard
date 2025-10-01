@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState } from "react";
 import Navbar from "~/components/Navbar";
 import Footer from "~/components/Footer";
@@ -14,6 +12,7 @@ import axios from "axios";
 import Skeleton from "~/components/ui/SkeletonLoader";
 import { useAppData } from "~/context/AppContext";
 import { formatDate } from "~/lib/utils";
+import { apiRequest } from "~/lib/api/axios";
 
 export default function PropertyPage() {
   const { id } = useParams();
@@ -26,9 +25,7 @@ export default function PropertyPage() {
   useEffect(() => {
     const fetchProperty = async () => {
       try {
-        const res = await axios.get(
-          `http://localhost:3001/api/properties/${id}/hostaway`
-        );
+        const res = await apiRequest<any>("get", `/properties/${id}/hostaway`);
         const data: Property = res.data.data;
 
         // ✅ Filter reviews from context
@@ -128,7 +125,7 @@ export default function PropertyPage() {
               <p className="text-gray-500">No approved reviews yet.</p>
             ) : (
               <ul className="space-y-6">
-                {approvedReviews.map((review) => (
+                {approvedReviews?.map((review) => (
                   <li key={review.id} className="border-b pb-4">
                     <p className="text-sm text-gray-600 mb-1">
                       <strong>{review.guestName}</strong> — {formatDate(review.submittedAt)}
