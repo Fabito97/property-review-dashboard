@@ -1,22 +1,36 @@
+# Stage 1: Install development dependencies
 FROM node:20-alpine AS development-dependencies-env
 COPY . /app
 WORKDIR /app
 RUN npm ci
 
+# Stage 2: Install production dependencies
 FROM node:20-alpine AS production-dependencies-env
 COPY ./package.json package-lock.json /app/
 WORKDIR /app
 RUN npm ci --omit=dev
 
+# Stage 3: Build the application
 FROM node:20-alpine AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
+
+# ✅ Inject build-time environment variable
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 RUN npm run build
 
+# Stage 4: Final runtime image
 FROM node:20-alpine
 COPY ./package.json package-lock.json /app/
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
 COPY --from=build-env /app/build /app/build
 WORKDIR /app
+
+# ✅ Inject runtime environment variable (for SSR server)
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
 CMD ["npm", "run", "start"]
