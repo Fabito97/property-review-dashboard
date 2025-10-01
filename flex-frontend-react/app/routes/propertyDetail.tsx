@@ -13,6 +13,7 @@ import Skeleton from "~/components/ui/SkeletonLoader";
 import { useAppData } from "~/context/AppContext";
 import { formatDate } from "~/lib/utils";
 import { apiRequest } from "~/lib/api/axios";
+import ApprovedReviews from "~/components/property/ApproovedReviews";
 
 export default function PropertyPage() {
   const { id } = useParams();
@@ -28,7 +29,7 @@ export default function PropertyPage() {
         const res = await apiRequest<any>("get", `/properties/${id}/hostaway`);
         const data: Property = res.data.data;
 
-        // ✅ Filter reviews from context
+        // Filter reviews from context
         const allReviews = reviewData?.reviews || [];
         const filtered = allReviews.filter(
           (r) => r.listingId === id && r.isApproved
@@ -76,7 +77,7 @@ export default function PropertyPage() {
         <PropertyShowCase images={property?.images} />
       </div>
 
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8">
+      <main className="max-w-6xl mx-auto px-10 sm:px-6 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8">
         <div className="w-full md:w-[70%]">
           {/* About */}
           <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
@@ -97,8 +98,8 @@ export default function PropertyPage() {
               <h2 className="text-lg sm:text-xl font-semibold mb-0">
                 Amenities
               </h2>
-              <button className="text-gray-700 text-sm cursor-pointer p-2 px-4 border border-gray-300 rounded-md hover:bg-gray-100">
-                View all
+              <button className="text-gray-700 text-xs cursor-pointer p-2 px-4 border border-gray-400 rounded-md hover:bg-gray-100">
+                View all Amenities
               </button>
             </div>
             <ul className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-gray-700 text-sm">
@@ -117,39 +118,16 @@ export default function PropertyPage() {
           <StayPolicy />
 
           {/* Approved Reviews */}
-          <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
-            <h2 className="text-lg sm:text-xl font-semibold mb-3">
-              Guest Reviews
-            </h2>
-            {approvedReviews.length === 0 ? (
-              <p className="text-gray-500">No approved reviews yet.</p>
-            ) : (
-              <ul className="space-y-6">
-                {approvedReviews?.map((review) => (
-                  <li key={review.id} className="border-b pb-4">
-                    <p className="text-sm text-gray-600 mb-1">
-                      <strong>{review.guestName}</strong> —{" "}
-                      {formatDate(review.submittedAt)}
-                    </p>
-                    <p className="text-gray-800 text-sm">
-                      {review.publicReview}
-                    </p>
-                    {review.rating && (
-                      <p className="text-yellow-600 text-sm mt-1">
-                        Rating: {review.rating}/10
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
         </div>
 
-        {/* Booking box: full width on mobile, sticky on md+ */}
+        {/* Booking box*/}
         <div className="w-full md:w-[30%]">
           <div className="md:sticky md:top-24">
+            <div className="flex flex-col md:flex-col-reverse gap-8">
+
+            <ApprovedReviews approvedReviews={approvedReviews} />
             <BookingBox />
+            </div>
           </div>
         </div>
       </main>

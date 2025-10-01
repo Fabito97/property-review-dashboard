@@ -9,8 +9,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-screen flex flex-col bg-[#FAFBFF] font-sans">
       {/* Layout Grid */}
       <div className="flex flex-1 min-h-screen">
-        {/* Desktop Sidebar */}
-        <div className="hidden md:block">
+        {/* Desktop Sidebar (fixed) */}
+        <div className="hidden md:block md:fixed md:inset-y-0 md:left-0 md:w-64 md:z-40">
           <Sidebar embedded={false} />
         </div>
 
@@ -47,8 +47,8 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
           />
         )}
 
-        {/* Main Content */}
-        <div className="w-full">
+  {/* Main Content (reserve sidebar width on desktop) */}
+  <div className="w-full md:ml-64">
           {/* Header */}
           <header className="mb-1 border-b border-gray-200 py-4 px-4 md:py-5 md:px-10 flex items-start md:items-center justify-between">
             <div className="flex items-center gap-4">

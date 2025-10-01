@@ -141,7 +141,7 @@ export default function ReviewTable({
         <div className="mt-13 text-right flex justify-center my-10">
           <button
             onClick={() => navigate("/reviews")}
-            className="text-sm text-gray-100 bg-blue-400 px-4 py-2 rounded-md hover:bg-blue-500 transition-colors cursor-pointer"
+            className="text-sm text-gray-100 bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
           >
             View More
           </button>
