@@ -11,13 +11,24 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <Sidebar />
 
         {/* Main Content */}
-     
-          {children}
-        
+        <div className="w-full">
+          {/* Header */}
+          <header className="mb-1  border-b border-gray-200 py-5 p-10 ">
+            <h1 className="text-xl font-bold mb-2">Welcome Admin</h1>
+            <p className="text-sm text-gray-600">
+              Manage and assess your properties' review performance here.
+            </p>
+          </header>
+
+            {/* Content */}
+          <section className="p-5 px-10 ">
+            {children}
+          </section>
+        </div>
       </div>
 
       {/* Footer */}
-      <Footer/>
+      <Footer />
     </div>
   );
 };

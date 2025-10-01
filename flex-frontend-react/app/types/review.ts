@@ -1,14 +1,20 @@
 // review.ts
 export interface Review {
-  id: number;
-  rating: number | null;
-  publicReview: string;
-  reviewCategory: { category: string; rating: number }[];
-  submittedAt: string;
-  guestName: string;
-  listingName: string;
-  channel: "Hostaway" | "Google" | "Other";
-  isApproved: boolean;
+    id: string | number;
+  listingId?: string | number;
+  listingName?: string;
+  type?: string; // e.g. host-to-guest, guest-to-host
+  status?: string;
+  rating?: number | null;
+  channel?: string; // e.g. hostaway, google
+  publicReview?: string;
+  categories?: Array<{ category: string; rating: number }>;
+  submittedAt: string; // keep original string for now
+  submittedAtIso?: string; // ISO string normalized
+  guestName?: string;
+  isApproved?: boolean; // manager selection field
+  isFlagged?: boolean; // manager selection field
+  location?: string;
 }
 
 export const mockReviews = [

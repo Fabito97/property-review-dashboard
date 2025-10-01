@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import reviewRoutes from "./routes/reviewRoutes";
+import propertyRoutes from "./routes/propertyRoutes";
 import { PORT } from "./env";
 
 dotenv.config();
@@ -17,6 +18,7 @@ app.get("/", (req, res) => {
 })
 
 app.use("/api/reviews", reviewRoutes)
+app.use("/api/properties", propertyRoutes)
 
 
 app.listen(PORT, () => {

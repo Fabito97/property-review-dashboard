@@ -1,4 +1,5 @@
 import React from "react";
+import type { PropertyImages } from "~/types/property";
 
 const specs = [
   { name: "Guests", number: 1, icon: "" },
@@ -7,40 +8,43 @@ const specs = [
   { name: "Beds", number: 3, icon: "" },
 ];
 
-const propertyImages = [
-  { alt: "Property Image 1", src: "/images/image-1.png" },
-  { alt: "Property Image 2", src: "/images/image-3.png" },
-  { alt: "Property Image 3", src: "/images/image-3.png" },
-  { alt: "Property Image 4", src: "/images/image-4.png" },
-  { alt: "Property Image 5", src: "/images/image-5.png" },
+// ✅ Fallback mock images matching PropertyImages type
+const fallbackImages: PropertyImages[] = [
+  { url: "/images/image-1.png", caption: "Property Image 1" },
+  { url: "/images/image-3.png", caption: "Property Image 2" },
+  { url: "/images/image-3.png", caption: "Property Image 3" },
+  { url: "/images/image-4.png", caption: "Property Image 4" },
+  { url: "/images/image-5.png", caption: "Property Image 5" },
 ];
 
-const PropertyShowCase = () => {
+const PropertyShowCase = ({ images }: { images?: PropertyImages[] }) => {
+  const displayImages = images && images.length > 0 ? images : fallbackImages;
+
   return (
     <section className="mb-8 px-4 sm:px-6 lg:px-8 pt-10">
-      <div className="border-b border-gray-400 ">
+      <div className="border-b border-gray-400">
         {/* Image Gallery */}
         <div className="flex justify-center h-[500px] items-center gap-4 mb-8 sm:mb-13">
+          {/* Main Image */}
           <div className="relative md:w-[50%] sm:h-full rounded-lg overflow-hidden">
             <img
-              src={propertyImages[0].src}
-              alt={propertyImages[0].alt}
+              src={displayImages[0].url}
+              alt={displayImages[0].caption}
               className="object-cover h-full w-full"
             />
           </div>
 
+          {/* Grid of Additional Images */}
           <div className="hidden md:grid grid-cols-2 grid-rows-2 gap-4 w-[50%] h-full">
-            {propertyImages.map((image, index) => (
+            {displayImages.slice(1, 5).map((image, index) => (
               <div
                 key={index}
-                className={`relative w-full h-full rounded-lg overflow-hidden ${
-                  index === 0 ? "hidden" : ""
-                }`}
+                className="relative w-full h-full rounded-lg overflow-hidden"
               >
                 <img
-                  src={image.src}
-                  alt={image.alt}
-                  className="object-cover w-full h-full "
+                  src={image.url}
+                  alt={image.caption}
+                  className="object-cover w-full h-full"
                 />
               </div>
             ))}
@@ -55,7 +59,7 @@ const PropertyShowCase = () => {
         {/* Specifications */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center md:w-[50%] mb-5">
           {specs.map((spec, index) => (
-            <div key={index} className=" p-4">
+            <div key={index} className="p-4">
               <span className="text-sm">{spec.number}</span>
               <p className="text-sm text-gray-500">{spec.name}</p>
             </div>

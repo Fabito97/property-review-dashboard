@@ -10,9 +10,9 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "sourceMap": true,
-    "moduleResolution": "node", /* Specify how TypeScript looks up a file from a given module specifier. */
-    "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */,
+    "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
+    "isolatedModules": true /* Ensure that each file can be safely transpiled without relying on other imports. */
   },
-  "include": ["src/**/*", "src/env.ts"],
+  "include": ["src/**/*", "src/env.ts", "src/mocks/mockData.ts"],
   "exclude": ["node_modules", "dist"]
 }

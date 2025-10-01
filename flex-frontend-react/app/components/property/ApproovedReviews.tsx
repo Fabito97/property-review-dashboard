@@ -27,7 +27,7 @@ const ApprovedReviews = () => {
                   </div>
                   <p className="text-gray-700">{review.publicReview}</p>
                   <div className="mt-2 text-sm text-gray-500">
-                    {new Date(review.submittedAt).toLocaleDateString()}
+                    {new Date(review?.submittedAt).toLocaleDateString()}
                   </div>
                 </div>
               ))}
