@@ -10,10 +10,11 @@ dotenv.config();
 const app = express();
 
 
-app.use(cors({
-  origin: CLIENT_URL,
-}));
+app.use(cors());
 app.use(express.json());
+
+// console.log("Client_Url", CLIENT_URL)
+
 
 // Root route to test server
 app.get("/", (req, res) => {
