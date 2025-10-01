@@ -1,9 +1,10 @@
-import Image from 'next/image'
-import React from 'react'
+import Image from "next/image";
+import React from "react";
 
 const Footer = () => {
   return (
-     <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
+    <footer className="p-10 bg-green-900 text-white pt-20">
+      <div className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center mb-8">
         <a
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
@@ -49,8 +50,12 @@ const Footer = () => {
           />
           Go to nextjs.org →
         </a>
-      </footer>
-  )
-}
+      </div>
+      <div className="flex justify-center items-center gap-2 pt-10 border-t border-gray-700">
+        <p>2025 The Flex. All rights reserved.</p>
+      </div>
+    </footer>
+  );
+};
 
-export default Footer
+export default Footer;
