@@ -49,7 +49,7 @@ export default function PropertyPage() {
 
   if (isLoading) {
     return (
-      <div className="bg-[#fffdf4] h-screen py-10">
+      <div className="bg-[#fff] h-screen py-10">
         <Navbar />
         <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 -screen">
           <div className="space-y-4">
