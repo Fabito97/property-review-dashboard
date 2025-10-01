@@ -1,3 +1,95 @@
-*/node_modules
-*/backend/.env*.*
-*/dist/
+# === Node / JavaScript ===
+# Ignore node_modules folders anywhere in the repo
+**/node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directories
+coverage/
+.nyc_output/
+
+# Build output
+/dist/
+**/dist/
+/.next/
+out/
+
+# TypeScript
+*.tsbuildinfo
+
+# Vite / local caches
+.vite/
+/.turbo/
+
+# Environment files (ignore real secrets, keep example files)
+.env
+.env.*
+!.env.example
+
+# Backend-specific envs
+flex-backend/.env
+flex-backend/.env.*
+
+# OS files
+.DS_Store
+ehthumbs.db
+Thumbs.db
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# macOS resource forks
+._*
+Icon
+
+# Yarn (Berry) artifacts
+/.yarn/cache
+/.yarn/unplugged
+/.yarn/build-state.yml
+/.pnp.*
+
+# Docker
+docker-compose.override.yml
+**/docker-compose.override.yml
+
+# Storybook cache
+node_modules/.cache/storybook
+
+# Distinguish lockfiles - generally keep them in source control
+# Uncomment the following lines if you prefer to ignore lockfiles
+# package-lock.json
+# yarn.lock
+
+# Ignore local VS Code settings but keep workspace settings example
+.vscode/*
+!.vscode/settings.json
+
+# Temporary test or debug output
+tmp/
+temp/
+
+# NPM pack
+*.tgz
+
+# Others
+*.local
+
+# Keep any repo-level README, license, src files etc.
