@@ -31,7 +31,7 @@ export default function PropertyPage() {
         // ✅ Filter reviews from context
         const allReviews = reviewData?.reviews || [];
         const filtered = allReviews.filter(
-          (r) => r.listingId === data.id
+          (r) => r.listingId === id
         );
 
         setProperty({ ...data, reviews: filtered });
@@ -68,20 +68,12 @@ export default function PropertyPage() {
     );
   }
 
-  if (!property) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Property not found.
-      </div>
-    );
-  }
-
   return (
     <div className="bg-[#f4f4f4]">
       <Navbar />
 
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <PropertyShowCase images={property.images} />
+        <PropertyShowCase images={property?.images} />
       </div>
 
       <main className="max-w-6xl mx-auto px-10 py-8 flex md:flex-row flex-col gap-8">
