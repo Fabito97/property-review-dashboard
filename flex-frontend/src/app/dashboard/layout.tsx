@@ -1,9 +1,9 @@
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "The Flex Living",
+  title: "Dashboard | The Flex Living",
   description: "Review Dashboard for the managers to assess their properties' performances",
 };
 
@@ -14,11 +14,10 @@ export default function DashboardLayout({
 }>) {
   return (
     <div>
-      <div className="font-sans flex  min-h-screen gap-16">
+      <div className="font-sans flex  min-h-screen">
         <Navbar />
         {children}
       </div>
-      <Footer />
     </div>
   );
 }
