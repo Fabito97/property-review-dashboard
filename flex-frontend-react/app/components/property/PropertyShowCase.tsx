@@ -1,3 +1,4 @@
+import { Bath, BedIcon, Home, User } from "lucide-react";
 import React from "react";
 import type { PropertyImages } from "~/types/property";
 
@@ -8,7 +9,7 @@ const specs = [
   { name: "Beds", number: 3, icon: "" },
 ];
 
-// ✅ Fallback mock images matching PropertyImages type
+// Fallback mock images matching PropertyImages type
 const fallbackImages: PropertyImages[] = [
   { url: "/images/image-1.png", caption: "Property Image 1" },
   { url: "/images/image-3.png", caption: "Property Image 2" },
@@ -24,13 +25,13 @@ const PropertyShowCase = ({ images }: { images?: PropertyImages[] }) => {
     <section className="mb-8 px-4 sm:px-6 lg:px-8 pt-10">
       <div className="border-b border-gray-400">
         {/* Image Gallery */}
-        <div className="flex justify-center h-[500px] items-center gap-4 mb-8 sm:mb-13">
+        <div className="flex justify-center sm:h-[500px] items-center gap-4 mb-8 sm:mb-13">
           {/* Main Image */}
           <div className="relative md:w-[50%] sm:h-full rounded-lg overflow-hidden">
             <img
               src={displayImages[0].url}
               alt={displayImages[0].caption}
-              className="object-cover h-full w-full"
+              className=" h-full w-full"
             />
           </div>
 
@@ -59,9 +60,17 @@ const PropertyShowCase = ({ images }: { images?: PropertyImages[] }) => {
         {/* Specifications */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center md:w-[50%] mb-5">
           {specs.map((spec, index) => (
-            <div key={index} className="p-4">
-              <span className="text-sm">{spec.number}</span>
-              <p className="text-sm text-gray-500">{spec.name}</p>
+            <div key={index} className="sm:p-4 p-2 flex items-center gap-4 justif-center">
+              {spec.name === "Beds" && <BedIcon className="h-4 w-4"/>}
+              {spec.name === "Bathrooms" && <Bath className="h-4 w-4"/>}
+              {spec.name === "Bedrooms" && <Home className="h-4 w-4"/>}
+              {spec.name === "Guests" && <User className="h-4 w-4"/>}
+              <div>
+                <span className="text-xs font-semibold">{spec.number}</span>
+                <p className="text-xs font-semibold text-gray-500">
+                  {spec.name}
+                </p>
+              </div>
             </div>
           ))}
         </div>

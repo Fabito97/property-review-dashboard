@@ -17,8 +17,8 @@ const ApprovedReviews = ({ approvedReviews }: ApprovedReviews) => {
         <p className="text-gray-500">No approved reviews yet.</p>
       ) : (
         <ul className="space-y-6">
-          {approvedReviews?.map((review) => (
-            <li key={review.id} className="border-b pb-4">
+          {approvedReviews?.map((review, index) => (
+            <li key={review.id} className={`${index === approvedReviews.length - 1 ? "border-b border-gray-300": ""} pb-4`}>
               <p className="text-sm text-gray-600 mb-1">
                 <strong>{review.guestName}</strong> —{" "}
                 {formatDate(review.submittedAt)}

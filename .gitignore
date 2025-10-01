@@ -41,6 +41,8 @@ out/
 # Backend-specific envs
 flex-backend/.env
 flex-backend/.env.*
+flex-frontend-react/.env
+flex-frontend-react/.env.*
 
 # OS files
 .DS_Store

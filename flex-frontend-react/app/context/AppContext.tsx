@@ -4,31 +4,28 @@ import type { Property } from "~/types/property";
 import type { Review } from "~/types/review";
 import type { ReviewApiResponse } from "~/types";
 
-
 type AppContextType = {
   reviewData: ReviewApiResponse | null;
   properties: Property[];
   loadingProperties: boolean;
   loadingReviews: boolean;
-  fetchProperties: () => Promise<void>; 
-  fetchReviews: () => Promise<void>; 
+  fetchProperties: () => Promise<void>;
+  fetchReviews: () => Promise<void>;
+  toggleReviewApproval: (reviewId: string | number, approved: boolean) => void;
 };
-
-
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppDataProvider({ children }: { children: React.ReactNode }) {
-    const [reviewData, setReviewData] = useState<ReviewApiResponse | null>(null);
+  const [reviewData, setReviewData] = useState<ReviewApiResponse | null>(null);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(false);
   const [loadingReviews, setLoadingReviews] = useState(false);
 
+  console.log("Properties:", properties);
+  console.log("Reviews:", reviewData?.reviews);
 
-  console.log("Properties:", properties)
-  console.log("Reviews:", reviewData?.reviews)
-
-   // Utility to derive properties from reviews
+  // Utility to derive properties from reviews
   function derivePropertiesFromReviews(reviews: Review[]): Property[] {
     const map = new Map<string, Property>();
 
@@ -56,20 +53,21 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
         const rated = existing.reviews.filter((rev) => rev.rating != null);
         const avg =
           rated.length > 0
-            ? rated.reduce((sum, rev) => sum + (rev.rating ?? 0), 0) / rated.length
+            ? rated.reduce((sum, rev) => sum + (rev.rating ?? 0), 0) /
+              rated.length
             : null;
 
         existing.reviewCount = existing.reviews.length;
         existing.overallRating = avg;
-        existing.ratingPercentage = avg != null ? `${Math.round(avg * 10)}%` : "N/A";
+        existing.ratingPercentage =
+          avg != null ? `${Math.round(avg * 10)}%` : "N/A";
       }
     }
 
     return Array.from(map.values());
   }
 
-
-   const fetchReviews = async () => {
+  const fetchReviews = async () => {
     setLoadingReviews(true);
     try {
       const res = await apiRequest<any>("get", "/reviews/hostaway");
@@ -83,6 +81,24 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
     } finally {
       setLoadingReviews(false);
     }
+  };
+
+  // Toggle review approval (updates reviewData and regenerates properties)
+  const toggleReviewApproval = (
+    reviewId: string | number,
+    approved: boolean
+  ) => {
+    if (!reviewData) return;
+    const updated = {
+      ...reviewData,
+      reviews: reviewData.reviews.map((r) =>
+        r.id === reviewId ? { ...r, isApproved: approved } : r
+      ),
+    };
+
+    setReviewData(updated);
+    const derived = derivePropertiesFromReviews(updated.reviews);
+    setProperties(derived);
   };
 
   const fetchProperties = async () => {
@@ -101,14 +117,24 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <AppContext.Provider value={{ properties, reviewData, loadingProperties, loadingReviews, fetchProperties, fetchReviews }}>
+    <AppContext.Provider
+      value={{
+        properties,
+        reviewData,
+        loadingProperties,
+        loadingReviews,
+        fetchProperties,
+        fetchReviews,
+        toggleReviewApproval,
+      }}
+    >
       {children}
     </AppContext.Provider>
   );
 }
 
-export const useAppData = () =>  {
+export const useAppData = () => {
   const ctx = useContext(AppContext);
   if (!ctx) throw new Error("useAppData must be used inside AppDataProvider");
   return ctx;
-}
+};

@@ -12,6 +12,7 @@ import {
 import { useNavigate, useLocation } from "react-router";
 import ReviewsModal from "~/components/ReviewModal";
 import type { Property } from "~/types/property";
+import { useAppData } from "~/context/AppContext";
 
 interface PropertyCardProps {
   property: Property;
@@ -22,6 +23,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
   const location = useLocation();
   const [showReviewsModal, setShowReviewsModal] = useState(false);
   const reviews = property.reviews || [];
+  const { toggleReviewApproval } = useAppData();
 
   const guestReviews = reviews.filter(
     (r) => r.type === "guest-to-host" && r.rating != null
@@ -56,7 +58,6 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
       return <TrendingDown className="h-4 w-4 text-red-500" />;
     return <Minus className="h-4 w-4 text-gray-400" />;
   };
-
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
@@ -147,17 +148,18 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
             </p>
           </div>
         )}
-      {showReviewsModal && (
-        <ReviewsModal
-          property={property}
-          onClose={() => setShowReviewsModal(false)}
-          onToggleApproval={() => { /* placeholder - can be wired to context */ }}
-        />
-      )}
+        {showReviewsModal && (
+          <ReviewsModal
+            property={property}
+            onClose={() => setShowReviewsModal(false)}
+            onToggleApproval={(id, approved) =>
+              toggleReviewApproval(id, approved)
+            }
+          />
+        )}
       </div>
     </div>
   );
 };
 
 export default PropertyCard;
-

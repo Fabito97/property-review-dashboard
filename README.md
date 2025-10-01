@@ -1,85 +1,104 @@
+# Flex Living — Developer Assessment (Reviews Dashboard)
 
-# 🏡 Flex Living - Developer Assessment
+## Introduction
 
-This project is a full-stack application built for the Flex Living developer assessment. It features a manager dashboard for property and review management and a public-facing page to display approved reviews.
+This project implements a Reviews Dashboard for Flex Living, designed to help managers assess property performance based on guest feedback. The solution integrates with Hostaway’s Reviews API (using mocks when no reviews are returned) and provides a manager-facing dashboard where reviews can be filtered, grouped, and approved for display on property pages.
 
-## Architecture
+## Scope of Work
 
-This project uses a monorepo architecture, containing three separate projects:
+1. **Hostaway Integration (Mocked)**
 
-- **`flex-backend`**: A Node.js/Express backend that serves as the API.
-- **`flex-frontend`**: A Next.js application for the manager dashboard and public pages.
-- **`flex-frontend-react`**: A React/Vite application, also for the manager dashboard.
+   * Integrated with Hostaway’s Reviews API, with fallback to dynamically generated mock reviews since the API is sandboxed and returns no reviews.
+   * Reviews are normalized into a consistent schema with grouped outputs (by listing, type, channel, date).
+   * Mock data uses randomized values for fields like approval (`isApproved` can be true or false) to simulate real-world variety.
 
-For detailed information on each project, please refer to their individual `README.md` files:
+2. **Manager Dashboard**
 
-- [`flex-backend/README.md`](./flex-backend/README.md)
-- [`flex-frontend/README.md`](./flex-frontend/README.md)
-- [`flex-frontend-react/README.md`](./flex-frontend-react/README.md)
+   * User-friendly dashboard displaying property-level performance.
+   * Supports filtering and sorting by rating, category, channel, or time.
+   * Managers can approve reviews for public display.
 
-## Features
+3. **Review Display Page**
 
-- **Manager Dashboard**: An intuitive interface to view per-property performance, filter/sort reviews by rating, category, and channel, and select reviews for public display.
-- **Review Display Page**: A replica of the Flex Living website to display approved reviews.
+   * Replicates Flex Living property details layout.
+   * Displays reviews that managers have approved.
+   * Ensures style consistency with the property page.
 
-## Getting Started
+4. **Exploration of Google Review Integration**
 
-### Prerequisites
+   * As part of the project, I explored the feasibility of adding Google Reviews through the **Google Places API** using `place_id` identifiers.
+   * **Findings:**
 
-- Node.js (v18 or later)
+     * It is technically possible to fetch reviews in a read-only manner.
+     * API quotas are restrictive, and the availability of reviews is inconsistent across properties.
+     * Implementing this feature would require additional time for setup, testing, and validation, which could not be justified within the assessment’s time constraints.
+   * **Decision:** The integration was excluded from the final build. However, the exploration is documented here to show awareness of potential enhancements and to highlight trade-offs made due to limited time and project scope.
 
-### Installation
 
-To get the project running locally, clone the repository and install the dependencies for each project:
+## Tech Stack Used
 
-```bash
-git clone <your-repo-url>
-cd flex-living-assessment
+- **Frontend**: React, React Router (Data APIs), Tailwind CSS  
+- **Backend**: Node.js, Express, TypeScript  
+- **State Management**: React Context (`AppContext`)  
+- **API Layer**: Axios  
+- **Deployment**: Render (frontend + backend services)  
+- **Utilities**: Mock data generator for reviews, grouping/normalization helpers
 
-# Install backend dependencies
-cd flex-backend
-npm install
 
-# Install Next.js frontend dependencies
-cd ../flex-frontend
-npm install
+## Setup Instructions
 
-# Install React/Vite frontend dependencies
-cd ../flex-frontend-react
-npm install
-```
+Each stack includes its own setup guide in its root folder.
 
-### Running the Applications
+* **Backend** (`flex-backend`): Express + TypeScript service exposing `/api/reviews/hostaway`.
+* **Frontend** (`flex-frontend`): React-based dashboard consuming the backend API.
 
-Each project can be run individually from its respective directory:
+Run each independently following their respective setup instructions.
 
-- **Backend** (`flex-backend`):
-  ```bash
-  npm run dev
-  ```
+## API Behavior
 
-- **Frontend (Next.js)** (`flex-frontend`):
-  ```bash
-  npm run dev
-  ```
+* Route: `GET /api/reviews/hostaway`
+* Fetches reviews from Hostaway or generates mock reviews if none are available.
+* Normalized response includes:
 
-- **Frontend (React/Vite)** (`flex-frontend-react`):
-  ```bash
-  npm run dev
-  ```
+  * Individual reviews (consistent schema)
+  * Grouped reviews (by listing, type, channel, date)
+  * Listing stats (reviewCount, averageRating, flaggedCount, etc.)
+  * Global summary (total reviews, rating distribution, averages)
 
-## Key Design and Logic Decisions
+## Normalization Rules
 
-1.  **Data Normalization**: The mocked Hostaway JSON data is parsed and normalized in the backend. This creates a consistent data structure that the frontend can easily consume, decoupling it from the raw external API structure.
+* Fields standardized across raw sources.
+* Ratings mapped to a 1–10 scale.
+* Approval (`isApproved`) defaults randomly in mock data to simulate real-world conditions.
+* Grouping utilities provided for listing, type, channel, and date.
 
-2.  **State Management**: The frontend applications use modern state management solutions (Zustand for Next.js and React Context for the Vite app) for a lightweight and efficient way to handle global state.
+## Testing the API
 
-3.  **API Behavior**: The backend exposes a simple RESTful API. The "selected for public display" state is managed on the frontend.
+1. Start the backend service:
 
-4.  **UI/UX Design**: The dashboard is designed for clarity and actionable insights, with at-a-glance metrics and intuitive filtering.
+   ```bash
+   cd flex-backend
+   npm install
+   npm run dev
+   ```
+2. Call the API:
 
-## Google Reviews Integration Findings
+   ```bash
+   curl http://localhost:3001/api/reviews/hostaway
+   ```
+3. Confirm that the response includes `reviews`, `groups`, `listingStats`, and `summary`.
 
-- **Feasibility**: Integration with Google Reviews is technically feasible using the Google Places API.
-- **Implementation Details**: This would require a Google Places API key, associating properties with Google Place IDs, and creating a new backend endpoint to fetch and normalize the review data.
-- **Decision**: Due to the sandboxed nature of this assessment, a basic implementation was not completed. However, the path to integration is clear and would be a straightforward next step.
+## Deployment & GitHub
+
+- **Backend (Render)**: [https://flex-backend.onrender.com](https://flex-backend.onrender.com)  
+- **Frontend (Render)**: [https://flex-frontend.onrender.com](https://flex-frontend.onrender.com)  
+
+- **GitHub Repository**: [https://github.com/Fabito97/property-review-dashboard](https://github.com/Fabito97/property-review-dashboard)
+
+
+## Further Improvements
+
+* Add contract tests (supertest) to validate response schema.
+* Implement end-to-end test flow (backend + frontend).
+* Extend normalization for richer Hostaway metadata.
+* Revisit Google Reviews integration with expanded time and scope.
