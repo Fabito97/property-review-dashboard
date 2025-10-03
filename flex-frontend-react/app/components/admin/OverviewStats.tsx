@@ -18,6 +18,7 @@ const ReviewStatsOverview: React.FC<ReviewStatsOverviewProps> = ({
   summary,
   loading = false,
 }) => {
+  
    if (loading || !summary) {
     return (
       <section>
@@ -40,8 +41,6 @@ const ReviewStatsOverview: React.FC<ReviewStatsOverviewProps> = ({
       </section>
     );
   }
-
-
 
   const {
     totalReviews,

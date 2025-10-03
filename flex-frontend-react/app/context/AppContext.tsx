@@ -11,7 +11,7 @@ type AppContextType = {
   loadingReviews: boolean;
   fetchProperties: () => Promise<void>;
   fetchReviews: () => Promise<void>;
-  toggleReviewApproval: (reviewId: string | number, approved: boolean) => void;
+  toggleReviewApproval: (review: Review) => void;
 };
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -26,30 +26,32 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   console.log("Reviews:", reviewData?.reviews);
 
   // Utility to derive properties from reviews
-  function derivePropertiesFromReviews(reviews: Review[]): Property[] {
+  function extractPropertiesFromReviews(reviews: Review[]): Property[] {
     const map = new Map<string, Property>();
 
-    for (const r of reviews) {
-      if (!r.listingId) continue;
+    for (const review of reviews) {
+      if (!review.listingId) continue;
 
-      const listingId = r.listingId.toString();
+      const listingId = review.listingId.toString();
 
       const existing = map.get(listingId);
 
       if (!existing) {
         map.set(listingId, {
           id: listingId,
-          name: r.listingName ?? "",
-          location: r.location ?? undefined,
-          overallRating: r.rating ?? null,
+          name: review.listingName ?? "",
+          location: review.location ?? undefined,
+          overallRating: review.rating ?? null,
           reviewCount: 1,
-          ratingPercentage: r.rating ? `${Math.round(r.rating * 10)}%` : "N/A",
-          createdAt: r.submittedAtIso ?? undefined,
-          reviews: [r],
-          type: r.type,
+          ratingPercentage: review.rating
+            ? `${Math.round(review.rating * 10)}%`
+            : "N/A",
+          createdAt: review.submittedAtIso ?? undefined,
+          reviews: [review],
+          type: review.type,
         });
       } else {
-        existing.reviews.push(r);
+        existing.reviews.push(review);
         const rated = existing.reviews.filter((rev) => rev.rating != null);
         const avg =
           rated.length > 0
@@ -63,7 +65,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
           avg != null ? `${Math.round(avg * 10)}%` : "N/A";
       }
     }
-
+    console.log("Map:", map);
     return Array.from(map.values());
   }
 
@@ -74,7 +76,7 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
       const data = res.data as ReviewApiResponse;
       setReviewData(data);
 
-      const derived = derivePropertiesFromReviews(data.reviews);
+      const derived = extractPropertiesFromReviews(data.reviews);
       setProperties(derived);
     } catch (err) {
       console.error("Failed to fetch reviews:", err);
@@ -84,25 +86,20 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   };
 
   // Toggle review approval (updates reviewData and regenerates properties)
-  const toggleReviewApproval = (
-    reviewId: string | number,
-    approved: boolean
+  const toggleReviewApproval = (    
+    review: Review
   ) => {
-    if (!reviewData) return;
+  if (!reviewData) return;
     const updated = {
       ...reviewData,
       reviews: reviewData.reviews.map((r) =>
-        r.id === reviewId ? { ...r, isApproved: approved } : r
+        r.id === review.id ? { ...r, isApproved: !r.isApproved } : r
       ),
     };
-
-    setReviewData(updated);
-    const derived = derivePropertiesFromReviews(updated.reviews);
-    setProperties(derived);
+    setReviewData(updated); 
   };
 
-  const fetchProperties = async () => {
-    // Optional: if you later want to fetch properties separately
+  const fetchProperties = async () => {    
     setLoadingProperties(true);
     try {
       // Placeholder for future property fetch
@@ -115,6 +112,14 @@ export function AppDataProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     fetchReviews();
   }, []);
+
+  useEffect(() => {
+    if (reviewData) {
+      setProperties(extractPropertiesFromReviews(reviewData.reviews));
+    } else {
+      setProperties([]);
+    }
+  }, [reviewData]);
 
   return (
     <AppContext.Provider

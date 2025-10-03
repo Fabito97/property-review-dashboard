@@ -90,7 +90,7 @@ const Navbar = () => {
 
           <div
             className={`absolute top-0 right-0 w-11/12 max-w-xs h-full shadow-lg p-6 overflow-auto ${
-              scrolled ? "bg-emerald-600 text-white" : "bg-white text-gray-800"
+              scrolled ? "bg-emerald-900 text-white" : "bg-white text-gray-800"
             }`}
           >
             <div className="flex items-center justify-between mb-6">

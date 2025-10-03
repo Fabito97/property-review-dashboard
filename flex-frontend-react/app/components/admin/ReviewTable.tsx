@@ -2,14 +2,16 @@ import { useState } from "react";
 import { Menu } from "@headlessui/react";
 import type { Review } from "~/types/review";
 import { useNavigate } from "react-router";
-import { getSentimentTag } from "~/lib/utils";
+import { getChannelColor, getRatingBadge, getSentimentTag } from "~/lib/utils";
+import Skeleton from "../ui/SkeletonLoader";
 
 type ReviewTableProps = {
   reviews: Review[];
-  onApproveToggle: (id: string | number, approved: boolean) => void;
+  onApproveToggle: (review: Review) => void;
   onReviewClick: (review: Review) => void;
   onFlag?: (id: string | number) => void;
   isRecentReviews?: boolean;
+  isLoading?: boolean;
 };
 
 export default function ReviewTable({
@@ -18,66 +20,88 @@ export default function ReviewTable({
   onReviewClick,
   onFlag,
   isRecentReviews = true,
+  isLoading,
 }: ReviewTableProps) {
   const navigate = useNavigate();
 
+  if (isLoading || !reviews) {
+    return (
+      <div>
+        <div className="space-y-4">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-white shadow-md rounded-md p-6 w-full overflow-x-auto border border-gray-100">
-      <table className="min-w-full text-sm">
-        <thead>
-          <tr className="border-b border-b-gray-200 text-gray-400">
-            <th className="text-left py-2 px-3 font-medium">Guest</th>
-            <th className="text-left py-2 px-3 font-medium">Property</th>
-            <th className="text-left py-2 px-3 font-medium">Rating</th>
-            <th className="text-left py-2 px-3 font-medium">Channel</th>
-            <th className="text-left py-2 px-3 font-medium">Review</th>
-            <th className="text-left py-2 px-3 font-medium">Submitted</th>
-            <th className="text-left py-2 px-3 font-medium">Status</th>
-            {!isRecentReviews && (
+    <div className="px-2 w-full bg-white shadow-md rounded-md p-6 border border-gray-100">
+      <div className="overflow-x-auto ">
+        <table className="min-w-full text-sm">
+          <thead>
+            <tr className="border-b border-b-gray-200 text-gray-400">
+              <th className="text-left py-2 px-3 font-medium">Guest</th>
+              <th className="text-left py-2 px-3 font-medium">Property</th>
+              <th className="text-left py-2 px-3 font-medium">Rating</th>
+              <th className="text-left py-2 px-3 font-medium">Channel</th>
+              <th className="text-left py-2 px-3 font-medium">Review</th>
+              <th className="text-left py-2 px-3 font-medium">Submitted</th>
+              <th className="text-left py-2 px-3 font-medium">Status</th>
               <th className="text-left py-2 px-3 font-medium">Actions</th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {reviews.map((r, index) => (
-            <tr
-              key={r.id}
-              className={`${
-                index !== reviews.length - 1 ? "border-b border-b-gray-200" : ""
-              } hover:bg-gray-50 cursor-pointer`}
-              onClick={() => onReviewClick(r)}
-            >
-              <td className="py-5 px-3">{r.guestName || "—"}</td>
-              <td className="py-2 px-3">{r.listingName || "—"}</td>
-              <td className={`py-2 px-3`}>{r.rating ?? "—"}</td>
-              <td className="py-2 px-3">{r.channel || "—"}</td>
-              <td className="py-2 px-3 max-w-[200px] truncate">
-                {r.publicReview || "—"}
-              </td>
-              <td className="py-2 px-3">
-                {r.submittedAt?.slice(0, 10) || "—"}
-              </td>
-              <td className="py-2 px-3">
-                {r.isFlagged ? (
-                  <span className="text-xs px-2 py-1 rounded-full bg-red-100 text-red-700">
-                    Flagged
+            </tr>
+          </thead>
+          <tbody>
+            {reviews.map((review, index) => (
+              <tr
+                key={review.id}
+                className={`${
+                  index !== reviews.length - 1
+                    ? "border-b border-b-gray-200"
+                    : ""
+                } hover:bg-gray-50 cursor-pointer`}
+                onClick={() => onReviewClick(review)}
+              >
+                <td className="py-5 px-3">{review.guestName || "—"}</td>
+                <td className="py-2 px-3">{review.listingName || "—"}</td>
+                <td className={`py-2 px-3 flex`}>
+                  <span className={`p-1 rounded-full px-2 ${review.rating && getRatingBadge(review.rating)?.color}`}>
+
+                  {review.rating ?? "N/A"}
                   </span>
-                ) : r.isApproved ? (
-                  <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-green-700">
-                    Approved
-                  </span>
-                ) : (
-                  <span className="text-xs px-2 py-1 rounded-full bg-gray-100 text-gray-700">
-                    Pending
-                  </span>
-                )}
-              </td>
-              {!isRecentReviews && (
+                  </td>
+                <td
+                  className={`py-2 px-3`}
+                >
+                  <span className={`p-1 rounded-full px-2 ${review.channel && getChannelColor(review?.channel)}`}>{review.channel || "—"}</span>
+                </td>
+                <td className="py-2 px-3 max-w-[200px] truncate">
+                  {review.publicReview || "—"}
+                </td>
+                <td className="py-2 px-3">
+                  {review.submittedAt?.slice(0, 10) || "—"}
+                </td>
+                <td className="py-2 px-3">
+                  {review.isFlagged ? (
+                    <span className="text-xs px-2 py-1 rounded-full bg-red-200 text-gray-700">
+                      Flagged
+                    </span>
+                  ) : review.isApproved ? (
+                    <span className="text-xs px-2 py-1 rounded-full bg-green-100 text-gray-700">
+                      Approved
+                    </span>
+                  ) : (
+                    <span className="text-xs px-2 py-1 rounded-full bg-blue-50 text-gray-700 animate-pulse">
+                      Pending
+                    </span>
+                  )}
+                </td>
                 <td className="py-2 px-3 flex justify-center mt-1">
                   <Menu as="div" className="absolute inline-block text-left">
                     <Menu.Button
                       onClick={(e) => e.stopPropagation()}
-                      className="text-sm px-2 py-1 rounded bg-gray-100 hover:bg-gray-200 cursor-pointer"
+                      className="text-sm px-2 py-1 rounded bg-blue-100 hover:bg-blue-200 cursor-pointer"
                     >
                       ⋯
                     </Menu.Button>
@@ -88,13 +112,13 @@ export default function ReviewTable({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onApproveToggle(r.id, !r.isApproved);
+                                onApproveToggle(review);
                               }}
                               className={`block w-full text-left px-4 py-2 text-sm ${
                                 active ? "bg-gray-100" : ""
                               }`}
                             >
-                              {r.isApproved ? "Unapprove" : "Approve"}
+                              {review.isApproved ? "Unapprove" : "Approve"}
                             </button>
                           )}
                         </Menu.Item>
@@ -103,7 +127,7 @@ export default function ReviewTable({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onFlag?.(r.id);
+                                onFlag?.(review.id);
                               }}
                               className={`block w-full text-left px-4 py-2 text-sm text-red-600 ${
                                 active ? "bg-red-50" : ""
@@ -118,7 +142,7 @@ export default function ReviewTable({
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                onReviewClick(r);
+                                onReviewClick(review);
                               }}
                               className={`block w-full text-left px-4 py-2 text-sm ${
                                 active ? "bg-gray-100" : ""
@@ -132,21 +156,11 @@ export default function ReviewTable({
                     </Menu.Items>
                   </Menu>
                 </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      {isRecentReviews && (
-        <div className="mt-13 text-right flex justify-center my-10">
-          <button
-            onClick={() => navigate("/reviews")}
-            className="text-sm text-gray-100 bg-blue-500 px-4 py-2 rounded-md hover:bg-blue-600 transition-colors cursor-pointer"
-          >
-            View More
-          </button>
-        </div>
-      )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

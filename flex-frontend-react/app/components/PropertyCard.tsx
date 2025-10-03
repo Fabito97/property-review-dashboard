@@ -13,6 +13,7 @@ import { useNavigate, useLocation } from "react-router";
 import ReviewsModal from "~/components/ReviewModal";
 import type { Property } from "~/types/property";
 import { useAppData } from "~/context/AppContext";
+import type { Review } from "~/types/review";
 
 interface PropertyCardProps {
   property: Property;
@@ -152,8 +153,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           <ReviewsModal
             property={property}
             onClose={() => setShowReviewsModal(false)}
-            onToggleApproval={(id, approved) =>
-              toggleReviewApproval(id, approved)
+            onToggleApproval={(review: Review) =>
+              toggleReviewApproval(review)
             }
           />
         )}

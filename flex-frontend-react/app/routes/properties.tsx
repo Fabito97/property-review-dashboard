@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import DashboardLayout from "./layouts/dashboardLayout";
+import DashboardLayout from "../layouts/dashboardLayout";
 import PropertyStats from "~/components/admin/PropertyStats";
 import PropertySection from "~/components/admin/PropertySection";
 import Skeleton from "~/components/ui/SkeletonLoader";

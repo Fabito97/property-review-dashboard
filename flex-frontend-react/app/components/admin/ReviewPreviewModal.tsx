@@ -1,13 +1,13 @@
 // components/ReviewPreviewModal.tsx
-import { Dialog } from '@headlessui/react';
-import { useState } from 'react';
-import type { Review } from '~/types/review';
-import ReviewCard from './ReviewPreviewCard';
+import { Dialog } from "@headlessui/react";
+import { useState } from "react";
+import type { Review } from "~/types/review";
+import ReviewCard from "./ReviewPreviewCard";
 
 type ReviewPreviewModalProps = {
   review: Review | null;
   onClose: () => void;
-  onApproveToggle: (id: string | number, approved: boolean) => void;
+  onApproveToggle: (review: Review) => void;
 };
 
 export default function ReviewPreviewModal({
@@ -21,7 +21,6 @@ export default function ReviewPreviewModal({
 
   const handleFlag = () => {
     setIsFlagged(true);
-    // TODO: send flag to backend
   };
 
   return (
@@ -31,7 +30,12 @@ export default function ReviewPreviewModal({
         <Dialog.Panel className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6 space-y-4">
           {/* <Dialog.Title className="text-lg font-semibold text-gray-900">Review Details</Dialog.Title> */}
 
-          <ReviewCard review={review} onApproveToggle={onApproveToggle} />
+          <ReviewCard
+            review={review}
+            onApproveToggle={(review) =>
+              onApproveToggle(review)
+            }
+          />
 
           <div className="flex justify-end gap-2">
             {!isFlagged && (
