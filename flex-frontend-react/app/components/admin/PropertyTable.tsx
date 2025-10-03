@@ -1,23 +1,40 @@
 // components/admin/PropertyTableContent.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import {
-  MapPin,
-  ArrowRightFromLine,
-  ArrowBigRight,
-} from "lucide-react";
+import { MapPin, ArrowRightFromLine, ArrowBigRight } from "lucide-react";
 import ReviewsModal from "~/components/ReviewModal";
 import PropertyPreviewModal from "~/components/admin/PropertyPreviewModal";
 import type { Property } from "~/types/property";
+import { useAppData } from "~/context/AppContext";
 
 interface PropertyTableContentProps {
   properties: Property[];
 }
 
-export default function PropertyTableContent({ properties }: PropertyTableContentProps) {
+export default function PropertyTableContent({
+  properties,
+}: PropertyTableContentProps) {
   const navigate = useNavigate();
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [reviewModalProperty, setReviewModalProperty] = useState<Property | null>(null);
+  const { toggleReviewApproval, properties: sourceProperties } = useAppData();
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(
+    null
+  );
+  const [reviewModalPropertyId, setReviewModalPropertyId] = useState<
+    string | null
+  >(null);
+
+  // Resolve selected properties from the context-backed sourceProperties to avoid stale objects
+  const selectedProperty: Property | null = selectedPropertyId
+    ? (sourceProperties.find(
+        (p) => String(p.id) === String(selectedPropertyId)
+      ) ?? null)
+    : null;
+
+  const reviewModalProperty: Property | null = reviewModalPropertyId
+    ? (sourceProperties.find(
+        (p) => String(p.id) === String(reviewModalPropertyId)
+      ) ?? null)
+    : null;
 
   return (
     <>
@@ -37,11 +54,15 @@ export default function PropertyTableContent({ properties }: PropertyTableConten
             <tr
               key={p.id}
               className={`hover:bg-blue-50 cursor-pointer transition-colors ${
-                index !== properties.length - 1 ? "border-b border-gray-100" : ""
+                index !== properties.length - 1
+                  ? "border-b border-gray-100"
+                  : ""
               }`}
-              onClick={() => setSelectedProperty(p)}
+              onClick={() => setSelectedPropertyId(p.id.toString())}
             >
-              <td className="py-4 px-4 font-medium text-gray-800">{p.name || "—"}</td>
+              <td className="py-4 px-4 font-medium text-gray-800">
+                {p.name || "—"}
+              </td>
               <td className="py-4 px-4 text-gray-600 flex items-center gap-1">
                 <MapPin className="h-4 w-4 text-gray-400" />
                 {p.location || "—"}
@@ -53,7 +74,8 @@ export default function PropertyTableContent({ properties }: PropertyTableConten
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
-                        setReviewModalProperty(p);
+                        setReviewModalPropertyId(p.id.toString());
+                        setSelectedPropertyId(null);
                       }}
                       className="text-xs px-2 py-1 rounded bg-gray-100 text-blue-700 hover:bg-blue-200 flex items-center gap-1"
                     >
@@ -86,17 +108,19 @@ export default function PropertyTableContent({ properties }: PropertyTableConten
       </table>
 
       {/* Modals */}
-      {selectedProperty && (
+      {/* Modals: render only when resolved property objects exist */}
+      {selectedProperty && !reviewModalProperty && (
         <PropertyPreviewModal
           property={selectedProperty}
-          onClose={() => setSelectedProperty(null)}
+          onClose={() => setSelectedPropertyId(null)}
         />
       )}
+
       {reviewModalProperty && (
         <ReviewsModal
           property={reviewModalProperty}
-          onClose={() => setReviewModalProperty(null)}
-          onToggleApproval={() => {}}
+          onClose={() => setReviewModalPropertyId(null)}
+          onToggleApproval={(review) => toggleReviewApproval(review)}
         />
       )}
     </>

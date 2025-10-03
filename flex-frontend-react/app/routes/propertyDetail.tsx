@@ -3,7 +3,6 @@ import Navbar from "~/components/Navbar";
 import Footer from "~/components/Footer";
 import PropertyShowCase from "~/components/property/PropertyShowCase";
 import BookingBox from "~/components/property/Booking";
-import StayPolicy from "~/components/property/StayPolicy";
 import { About } from "~/constants";
 import type { Property } from "~/types/property";
 import type { Review } from "~/types/review";
@@ -14,6 +13,7 @@ import { useAppData } from "~/context/AppContext";
 import { formatDate } from "~/lib/utils";
 import { apiRequest } from "~/lib/api/axios";
 import ApprovedReviews from "~/components/property/ApproovedReviews";
+import StayPolicy from "~/components/propertyDetails/StayPolicy";
 
 export default function PropertyPage() {
   const { id } = useParams();
@@ -22,6 +22,7 @@ export default function PropertyPage() {
   const [property, setProperty] = useState<Property | null>(null);
   const [approvedReviews, setApprovedReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showFullDetails, setShowFullDetails] = useState(false);
 
   useEffect(() => {
     const fetchProperty = async () => {
@@ -45,13 +46,12 @@ export default function PropertyPage() {
     };
     if (id) fetchProperty();
   }, [id, reviewData]);
-  console.log("Properties from me:", property);
 
   if (isLoading) {
     return (
-      <div className="bg-[#fff] h-screen py-10">
+      <div className="bg-[#fff]">
         <Navbar />
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 -screen">
+        <div className="max-w-6xl mx-auto px-4 pb-10 h-screen sm:px-6 py-6 sm:py-8">
           <div className="space-y-4">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
               {Array.from({ length: 4 }).map((_, i) => (
@@ -82,13 +82,18 @@ export default function PropertyPage() {
           {/* About */}
           <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
             <h2 className="text-lg sm:text-xl font-semibold mb-3">
-              About Details
+              About this property
             </h2>
-            <p className="text-[#333] text-sm sm:text-base line-clamp-3">
-              {About.slice(100)}
+            <p className="text-[#333] text-xs sm:text-sm whitespace-pre-line">
+              {showFullDetails
+                ? property?.description || About
+                : property?.description?.slice(0, 100) || About.slice(0, 100)}
             </p>
-            <button className="text-green-700 text-sm mt-2 cursor-pointer">
-              Read more
+            <button
+              className="text-green-700 text-sm mt-2 cursor-pointer"
+              onClick={() => setShowFullDetails((prev) => !prev)}
+            >
+              {showFullDetails ? "Read less" : "Read more"}
             </button>
           </section>
 
@@ -124,9 +129,8 @@ export default function PropertyPage() {
         <div className="w-full md:w-[30%]">
           <div className="md:sticky md:top-24">
             <div className="flex flex-col md:flex-col-reverse gap-8">
-
-            <ApprovedReviews approvedReviews={approvedReviews} />
-            <BookingBox />
+              <ApprovedReviews approvedReviews={approvedReviews} />
+              <BookingBox />
             </div>
           </div>
         </div>

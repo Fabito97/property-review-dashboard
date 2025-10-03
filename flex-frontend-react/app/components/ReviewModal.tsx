@@ -1,25 +1,33 @@
-import React, { useState } from 'react';
-import { Dialog } from '@headlessui/react';
-import ReviewCard from './ReviewCard';
-import { Eye, EyeOff, MessageSquare } from 'lucide-react';
-import type { Property } from '~/types/property';
+import React, { useState } from "react";
+import { Dialog } from "@headlessui/react";
+import ReviewCard from "./ReviewCard";
+import { Eye, EyeOff, MessageSquare } from "lucide-react";
+import type { Property } from "~/types/property";
+import type { Review } from "~/types/review";
 
 interface ReviewsModalProps {
   property?: Property | null;
   onClose: () => void;
-  onToggleApproval: (reviewId: string | number, approved: boolean) => void;
+  onToggleApproval: (review: Review) => void;
 }
 
-
-const ReviewsModal: React.FC<ReviewsModalProps> = ({ property, onClose, onToggleApproval }) => {
-  const [filter, setFilter] = useState<'all' | 'public' | 'private'>('all');
+const ReviewsModal: React.FC<ReviewsModalProps> = ({
+  property,
+  onClose,
+  onToggleApproval,
+}) => {
+  const [filter, setFilter] = useState<"all" | "public" | "private">("all");
   const reviews = property?.reviews || [];
-  
-  const filtered = reviews.filter((r) =>
-    filter === 'public' ? r.isApproved : filter === 'private' ? !r.isApproved : true
-);
 
-if (!property) return;
+  const filtered = reviews.filter((r) =>
+    filter === "public"
+      ? r.isApproved
+      : filter === "private"
+        ? !r.isApproved
+        : true
+  );
+
+  if (!property) return null;
 
   return (
     <Dialog open={true} onClose={onClose} className="relative z-50">
@@ -45,7 +53,9 @@ if (!property) return;
 
             <select
               value={filter}
-              onChange={(e) => setFilter(e.target.value as 'all' | 'public' | 'private')}
+              onChange={(e) =>
+                setFilter(e.target.value as "all" | "public" | "private")
+              }
               className="text-sm border border-gray-300 rounded-md px-3 py-1 focus:ring-2 focus:ring-blue-500"
             >
               <option value="all">All</option>
@@ -62,7 +72,7 @@ if (!property) return;
                 <ReviewCard
                   key={review.id}
                   review={review}
-                  onToggleApproval={onToggleApproval}
+                  onToggleApproval={(review) => onToggleApproval(review)}
                 />
               ))}
             </div>

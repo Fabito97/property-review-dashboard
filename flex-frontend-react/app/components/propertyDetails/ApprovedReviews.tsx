@@ -11,7 +11,7 @@ const ApprovedReviews = ({ approvedReviews }: ApprovedReviews) => {
   const [isLoading, setIsLoading] = useState(true);
 
   return (
-    <section className="mb-8 bg-white p-10 rounded-xl shadow-lg">
+    <section className="mb-8 bg-white p-10 rounded-xl shadow-lg max-h-12 overflow-y-hidden">
       <h2 className="text-xl font-semibold mb-4">Guest Reviews</h2>
       {approvedReviews.length === 0 ? (
         <p className="text-gray-500">No approved reviews yet.</p>

@@ -6,7 +6,7 @@ import UserIcon from "~/icons/UserIcon";
 
 interface ReviewCardProps {
   review: Review;
-  onApproveToggle?: (id: string | number, approved: boolean) => void;
+  onApproveToggle?: (review: Review) => void;
   showPublicStatus?: boolean;
 }
 
@@ -121,10 +121,10 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
       </div>
 
       {/* Optional approve toggle */}
-      {/* {onApproveToggle && (
+      {onApproveToggle && (
         <div className="mt-4 flex justify-end">
           <button
-            onClick={() => onApproveToggle(review.id, !review.isApproved)}
+            onClick={() => onApproveToggle(review)}
             className={`px-3 py-1 text-xs rounded-md transition-colors ${
               review.isApproved
                 ? 'text-green-600 bg-green-50 hover:bg-green-100'
@@ -134,7 +134,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
             {review.isApproved ? 'Approved' : 'Pending'}
           </button>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

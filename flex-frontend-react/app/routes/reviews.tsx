@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import ReviewTable from "~/components/admin/ReviewTable";
 import ReviewFilterPopover from "~/components/ReviewFilterPanel";
-import DashboardLayout from "./layouts/dashboardLayout";
+import DashboardLayout from "../layouts/dashboardLayout";
 import ReviewPreviewModal from "~/components/admin/ReviewPreviewModal";
 import { useAppData } from "~/context/AppContext";
 import SearchFilter from "~/components/SearchFilter";
@@ -9,12 +9,12 @@ import Skeleton from "~/components/ui/SkeletonLoader";
 import type { Review } from "~/types/review";
 
 export default function ReviewsPage() {
-  const { reviewData: sourceReviews, loadingReviews } = useAppData();
+  const { reviewData: sourceReviews, loadingReviews, toggleReviewApproval } = useAppData();
 
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [searchResults, setSearchResults] = useState<Review[]>([]);
-  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
-
+  const [selectedReviewId, setSelectedReviewId] = useState<string | null>(null);
+  const selectedReview = sourceReviews?.reviews?.find((r) => r.id == selectedReviewId)
   useEffect(() => {
     if (sourceReviews?.reviews) {
       setFilteredReviews(sourceReviews.reviews);
@@ -65,19 +65,10 @@ export default function ReviewsPage() {
           <>
             <ReviewTable
               reviews={paginatedReviews}
-              onApproveToggle={(id, approved) => {
-                setFilteredReviews((prev) =>
-                  prev.map((r) =>
-                    r.id === id ? { ...r, isApproved: approved } : r
-                  )
-                );
-                setSearchResults((prev) =>
-                  prev.map((r) =>
-                    r.id === id ? { ...r, isApproved: approved } : r
-                  )
-                );
+              onApproveToggle={(review: Review) => {              
+                toggleReviewApproval(review);
               }}
-              onReviewClick={(r) => setSelectedReview(r)}
+              onReviewClick={(r) => setSelectedReviewId(r.id.toString())}
               isRecentReviews={false}
             />
 
@@ -88,7 +79,9 @@ export default function ReviewsPage() {
                 </p>
                 <div className="flex gap-2">
                   <button
-                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.max(prev - 1, 1))
+                    }
                     disabled={currentPage === 1}
                     className={`px-3 py-1 rounded-md text-sm ${
                       currentPage === 1
@@ -134,18 +127,9 @@ export default function ReviewsPage() {
 
         <ReviewPreviewModal
           review={selectedReview}
-          onClose={() => setSelectedReview(null)}
-          onApproveToggle={(id, approved) => {
-            setFilteredReviews((prev) =>
-              prev.map((r) =>
-                r.id === id ? { ...r, isApproved: approved } : r
-              )
-            );
-            setSearchResults((prev) =>
-              prev.map((r) =>
-                r.id === id ? { ...r, isApproved: approved } : r
-              )
-            );
+          onClose={() => setSelectedReviewId(null)}
+          onApproveToggle={(review: Review) => {
+           toggleReviewApproval(review)
           }}
         />
       </div>
