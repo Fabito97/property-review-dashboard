@@ -25,10 +25,10 @@ export default function PropertyTableContent({
 
   // Resolve selected properties from the context-backed sourceProperties to avoid stale objects
   const selectedProperty: Property | null = selectedPropertyId
-    ? (sourceProperties.find(
-        (p) => String(p.id) === String(selectedPropertyId)
-      ) ?? null)
-    : null;
+  ? (sourceProperties.find(
+    (p) => String(p.id) === String(selectedPropertyId)
+  ) ?? null)
+  : null;
 
   const reviewModalProperty: Property | null = reviewModalPropertyId
     ? (sourceProperties.find(
@@ -36,9 +36,11 @@ export default function PropertyTableContent({
       ) ?? null)
     : null;
 
+    console.log("Property:", selectedProperty, selectedPropertyId)
+    console.log("Review:", reviewModalProperty, reviewModalPropertyId)
   return (
     <>
-      <table className="min-w-full text-sm">
+      <table className="min-w-full text-xs md:text-sm overflow-x-auto">
         <thead>
           <tr className="border-b border-gray-200 text-gray-500 bg-gray-50">
             <th className="text-left py-3 px-4 font-medium">Name</th>
@@ -64,7 +66,7 @@ export default function PropertyTableContent({
                 {p.name || "—"}
               </td>
               <td className="py-4 px-4 text-gray-600 flex items-center gap-1">
-                <MapPin className="h-4 w-4 text-gray-400" />
+                <MapPin className="h-4 w-4 text-gray-400 hidden md:block" />
                 {p.location || "—"}
               </td>
               <td className="py-4 px-4 text-gray-600">
@@ -77,7 +79,7 @@ export default function PropertyTableContent({
                         setReviewModalPropertyId(p.id.toString());
                         setSelectedPropertyId(null);
                       }}
-                      className="text-xs px-2 py-1 rounded bg-gray-100 text-blue-700 hover:bg-blue-200 flex items-center gap-1"
+                      className="text-xs px-2 py-1 rounded cursor-pointer bg-gray-100 text-blue-700 hover:bg-blue-200 flex items-center gap-1"
                     >
                       <ArrowRightFromLine className="h-3 w-3" />
                     </button>
@@ -96,7 +98,7 @@ export default function PropertyTableContent({
                     e.stopPropagation();
                     navigate(`/properties/${p.id}`);
                   }}
-                  className="text-sm px-3 py-1 rounded-md bg-blue-100 text-gray-700 hover:bg-blue-200 flex items-center gap-1"
+                  className="text-sm px-3 py-1 cursor-pointer rounded-md bg-blue-100 text-gray-700 hover:bg-blue-200 flex items-center gap-1"
                 >
                   <ArrowBigRight className="h-4 w-4 text-blue-400" />
                   View
@@ -107,12 +109,11 @@ export default function PropertyTableContent({
         </tbody>
       </table>
 
-      {/* Modals */}
-      {/* Modals: render only when resolved property objects exist */}
-      {selectedProperty && !reviewModalProperty && (
+      {/* Modals */}     
+      {selectedProperty && (
         <PropertyPreviewModal
           property={selectedProperty}
-          onClose={() => setSelectedPropertyId(null)}
+          onClose={() => setSelectedPropertyId(null)}          
         />
       )}
 

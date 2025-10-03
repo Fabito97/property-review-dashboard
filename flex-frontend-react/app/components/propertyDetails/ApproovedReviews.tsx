@@ -19,7 +19,7 @@ const ApprovedReviews = ({
             {approvedReviews?.map((review, index) => (
               <li
                 key={review.id}
-                className={`${approvedReviews.length - 1 !== index ? "border-b border-gray-400" : ""} pb-4`}
+                className={`${approvedReviews.length - 1 !== index ? "border-b border-gray-300" : ""} pb-4`}
               >
                 <p className="text-xs text-gray-600 mb-1">
                   <UserIcon className="h-4 w-4 mr- inline-block mr-1 mb-1" />

@@ -1,18 +1,16 @@
 import { useEffect, useState } from "react";
 import Navbar from "~/components/Navbar";
 import Footer from "~/components/Footer";
-import PropertyShowCase from "~/components/property/PropertyShowCase";
-import BookingBox from "~/components/property/Booking";
+import PropertyShowCase from "~/components/propertyDetails/PropertyShowCase";
+import BookingBox from "~/components/propertyDetails/Booking";
 import { About } from "~/constants";
 import type { Property } from "~/types/property";
 import type { Review } from "~/types/review";
 import { useParams } from "react-router";
-import axios from "axios";
 import Skeleton from "~/components/ui/SkeletonLoader";
 import { useAppData } from "~/context/AppContext";
-import { formatDate } from "~/lib/utils";
 import { apiRequest } from "~/lib/api/axios";
-import ApprovedReviews from "~/components/property/ApproovedReviews";
+import ApprovedReviews from "~/components/propertyDetails/ApproovedReviews";
 import StayPolicy from "~/components/propertyDetails/StayPolicy";
 
 export default function PropertyPage() {
@@ -73,11 +71,11 @@ export default function PropertyPage() {
     <div className="bg-[#fffdf4]">
       <Navbar />
 
-      <div className="md:max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 h-full">
+      <div className="md:max-w-6xl mx-auto px-4 sm:px-6 sm:py-8 h-full">
         <PropertyShowCase images={property?.images} />
       </div>
 
-      <main className="max-w-6xl mx-auto px-10 sm:px-6 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8">
+      <main className="max-w-6xl mx-auto px-5 md:px-10 sm:px-6 py-6 sm:py-8 flex flex-col md:flex-row gap-6 md:gap-8">
         <div className="w-full md:w-[70%]">
           {/* About */}
           <section className="mb-6 sm:mb-8 bg-white p-6 sm:p-10 rounded-xl shadow-lg">
@@ -126,9 +124,9 @@ export default function PropertyPage() {
         </div>
 
         {/* Booking box*/}
-        <div className="w-full md:w-[30%]">
+        <div className="w-full md:w-[30%] mb-10">
           <div className="md:sticky md:top-24">
-            <div className="flex flex-col md:flex-col-reverse gap-8">
+            <div className="flex flex-col md:flex-col-reverse gap-4 md:gap-8">
               <ApprovedReviews approvedReviews={approvedReviews} />
               <BookingBox />
             </div>

@@ -83,7 +83,7 @@ export default function Home() {
           <ReviewTable
             reviews={recentReviews}
             onApproveToggle={toggleReviewApproval}
-            onReviewClick={review =>setSelectedReviewId(review.id.toString())}
+            onReviewClick={(review) => setSelectedReviewId(review.id.toString())}
             isLoading={loadingReviews}
           />
           <div className=" text-right flex justify-center my-5">

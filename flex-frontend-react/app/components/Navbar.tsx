@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router";
 import { navItems } from "~/constants";
@@ -83,7 +84,7 @@ const Navbar = () => {
       {open && (
         <div className="fixed inset-0 z-50">
           <div
-            className="absolute inset-0 bg-black bg-opacity-40"
+            className="absolute inset-0 bg-black opacity-40"
             onClick={() => setOpen(false)}
             aria-hidden
           />
@@ -93,8 +94,8 @@ const Navbar = () => {
               scrolled ? "bg-emerald-900 text-white" : "bg-white text-gray-800"
             }`}
           >
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-3">
+            <div className="flex items-center justify-end mb-6">
+              {/* <div className="flex items-center gap-3">
                 <img
                   src={"/logo.png"}
                   alt="the flex"
@@ -103,7 +104,7 @@ const Navbar = () => {
                   className={"rounded-full"}
                 />
                 <span className="font-semibold">the flex</span>
-              </div>
+              </div> */}
               <button
                 aria-label="Close menu"
                 onClick={() => setOpen(false)}
@@ -111,7 +112,7 @@ const Navbar = () => {
                   scrolled ? "focus:ring-white" : "focus:ring-indigo-500"
                 }`}
               >
-                Close
+                <X className="h-5 w-5"/>
               </button>
             </div>
 

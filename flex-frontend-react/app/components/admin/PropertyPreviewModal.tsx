@@ -2,6 +2,7 @@ import React from 'react';
 import { Dialog } from '@headlessui/react';
 import type { Property } from '~/types/property';
 import PropertyCard from '../PropertyCard'; // adjust path if needed
+import { useNavigate } from 'react-router';
 
 interface PropertyPreviewModalProps {
   property: Property | null;
@@ -9,6 +10,7 @@ interface PropertyPreviewModalProps {
 }
 
 const PropertyPreviewModal: React.FC<PropertyPreviewModalProps> = ({ property, onClose }) => {
+  const navigate = useNavigate();
   return (
     <Dialog open={!!property} onClose={onClose} className="relative z-50">
       <div className="fixed inset-0 bg-black/50" aria-hidden="true" />
@@ -18,9 +20,18 @@ const PropertyPreviewModal: React.FC<PropertyPreviewModalProps> = ({ property, o
             Property Details
           </Dialog.Title>
 
-          {property && <PropertyCard property={property} />}
+          {property && <PropertyCard property={property} onReviewClick={onClose} />}
 
-          <div className="mt-6 flex justify-end">
+          <div className="mt-6 flex justify-between">
+            <button
+              onClick={() => {
+                navigate(`/properties/${property?.id}`); 
+                onClose()
+              }}
+              className="px-4 py-2 text-sm text-gray-600 bg-blue-100 hover:bg-gray-200 rounded-md"
+            >
+              View
+            </button>
             <button
               onClick={onClose}
               className="px-4 py-2 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-md"

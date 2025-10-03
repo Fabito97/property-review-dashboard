@@ -9,7 +9,7 @@ import {
 
 const StayPolicy = () => {
   return (
-    <section className="bg-white rounded-lg shadow-md p-6 mb-8 flex flex-col gap-4">
+    <section className="bg-white rounded-lg shadow-md p-6 mb-3 md:mb-8 flex flex-col gap-4">
       <h2 className="text-xl font-semibold mb-4">Stay Policies</h2>
 
       {/* Check-in & Check-out */}
@@ -21,11 +21,11 @@ const StayPolicy = () => {
           </h3>
         </div>
         <div className="text-sm text-gray-600 space-y-1 flex md:flex-row w-full flex-col gap-4 items-center">
-          <div className="bg-white p-4 flex-1 flex flex-col rounded-md">
+          <div className="bg-white p-4 md:flex-1 flex flex-col rounded-md w-full">
             <p className="text-xs">Check-in Time</p>
             <p className="font-bold">3:00 PM</p>
           </div>
-          <div className="bg-white p-4 flex-1 flex flex-col rounded-md">
+          <div className="bg-white p-4 md:flex-1 flex flex-col rounded-md w-full">
             <p className="text-xs">Check-out Time</p>
             <p className="font-bold">10:00 AM</p>
           </div>

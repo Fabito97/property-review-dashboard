@@ -21,7 +21,7 @@ export default function PropertySection({
 
   return (
     <>  
-      <div className="shadow-md p-6 rounded-lg border border-gray-200 bg-white">
+      <div className="shadow-md sm:p-6 rounded-lg border border-gray-200 bg-white overflow-x-auto">
         {loading ? (
           <div className="space-y-4">
             {Array.from({ length: pageSize }).map((_, i) => (
@@ -35,9 +35,9 @@ export default function PropertySection({
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex flex-col md:flex-row md:justify-between items-center gap-2 mt-6 w-[70%] mx-auto">
+        <div className="flex flex-col md:flex-row md:justify-between items-center gap-2 mt-6 px-2 md:w-[70%] mx-auto">
           <p className="text-sm text-gray-600">
-            Showing page {currentPage} of {totalPages}
+            Showing {currentPage * paginated.length} of {properties.length} properties.
           </p>
           <div className="flex gap-2">
             <button
