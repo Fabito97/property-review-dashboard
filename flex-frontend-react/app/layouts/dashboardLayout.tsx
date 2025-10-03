@@ -40,7 +40,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
                 <h1 className="text-lg md:text-xl font-bold mb-0">
                   Welcome Admin
                 </h1>
-                <p className="text-sm text-gray-600">
+                <p className="text-xs md:text-sm text-gray-600">
                   Manage and assess your properties' review performance here.
                 </p>
               </div>

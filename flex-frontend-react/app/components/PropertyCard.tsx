@@ -6,7 +6,6 @@ import {
   Minus,
   MapPin,
   Eye,
-  ArrowBigRight,
   ArrowRightFromLine,
 } from "lucide-react";
 import { useNavigate, useLocation } from "react-router";
@@ -17,12 +16,17 @@ import type { Review } from "~/types/review";
 
 interface PropertyCardProps {
   property: Property;
+  onReviewClick?: () => void;
 }
 
-const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
+const PropertyCard: React.FC<PropertyCardProps> = ({
+  property,
+  onReviewClick,
+}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [showReviewsModal, setShowReviewsModal] = useState(false);
+
   const reviews = property.reviews || [];
   const { toggleReviewApproval } = useAppData();
 
@@ -107,12 +111,8 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      const isAdmin = location.pathname.includes("/");
-                      if (isAdmin) {
-                        setShowReviewsModal(true);
-                      } else {
-                        navigate(`/properties/${property.id}`);
-                      }
+                      setShowReviewsModal(true);
+                      // onReviewClick?.();
                     }}
                     aria-label="Open reviews"
                     className="p-1 rounded hover:shadow bg-blue-100 ml-2 cursor-pointer hover"
@@ -153,9 +153,7 @@ const PropertyCard: React.FC<PropertyCardProps> = ({ property }) => {
           <ReviewsModal
             property={property}
             onClose={() => setShowReviewsModal(false)}
-            onToggleApproval={(review: Review) =>
-              toggleReviewApproval(review)
-            }
+            onToggleApproval={(review: Review) => toggleReviewApproval(review)}
           />
         )}
       </div>

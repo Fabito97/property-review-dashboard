@@ -59,13 +59,13 @@ const Sidebar = ({
 
       {/* Mobile Sidebar (overlay) */}
       <div
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white shadow-lg transform transition-transform duration-200 md:hidden ${
+        className={`fixed inset-y-0 left-0 z-51 w-64 bg-white shadow-lg transform transition-transform duration-200 md:hidden ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
         aria-hidden={!sidebarOpen}
       >
         <div className="p-2 h-full overflow-auto">
-          <div className="flex items-center justify-between px-4 py-3 border-b">
+          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-300">
             <div className="flex items-center gap-3">
               <img src="/logo.png" alt="The Flex" width={36} height={36} />
               <h3 className="font-bold">The Flex</h3>

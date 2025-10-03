@@ -4,8 +4,8 @@ import PropertyStats from "~/components/admin/PropertyStats";
 import PropertySection from "~/components/admin/PropertySection";
 import Skeleton from "~/components/ui/SkeletonLoader";
 import { useAppData } from "~/context/AppContext";
-import SearchFilter from "~/components/SearchFilter";
-import PropertyFilterPanel from "~/components/PropertyFilterPanel";
+import SearchFilter from "~/components/ui/SearchFilter";
+import PropertyFilterPanel from "~/components/ui/PropertyFilterPanel";
 import type { Property } from "~/types/property";
 
 export default function PropertyPage() {
@@ -36,7 +36,7 @@ export default function PropertyPage() {
 
   return (
     <DashboardLayout>
-      <div className="bg-white rounded-md py-5 w-full overflow-x-auto pb-20">
+      <div className="bg-white rounded-md py-5 w-full overflow-x-hidden pb-10 md:pb-15">
         <h2 className="text-2xl font-semibold mb-2">Property Overview</h2>
 
         {/* Stats */}
@@ -53,8 +53,8 @@ export default function PropertyPage() {
           />
         )}
 
-        {/* Table Section */}
-        <div className="pt-10 pb-2 flex items-center justify-between">
+        {/* Property table Section */}
+        <div className="pt-5 md:pt-10 pb-2 flex items-center justify-between">
           <h2 className="text-2xl font-bold mb-4">All Properties</h2>
         </div>
 

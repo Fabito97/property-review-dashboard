@@ -83,3 +83,7 @@
 .scrollbar-thumb-gray-300 {
   --scrollbar-thumb: #d1d5db; /* Corresponds to gray-300 */
 }
+
+button {
+  cursor: pointer;
+}
