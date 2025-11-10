@@ -1,4 +1,4 @@
-# Flex Living — Developer Assessment (Reviews Dashboard)
+# Flex Living — Reviews Dashboard
 
 ## Introduction
 
