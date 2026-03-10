@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This project implements a Reviews Dashboard for Flex Living, designed to help managers assess property performance based on guest feedback. The solution integrates with Hostaway’s Reviews API (using mocks when no reviews are returned) and provides a manager-facing dashboard where reviews can be filtered, grouped, and approved for display on property pages.
+This project implements a mock property Reviews Dashboard for flex living, designed to help managers assess property performance based on guest feedback. The solution integrates with Hostaway’s Reviews API (using mocks when no reviews are returned) and provides a manager-facing dashboard where reviews can be filtered, grouped, and approved for display on property pages.
 
 ## Scope of Work
 
