@@ -1,4 +1,4 @@
-# Flex Living — Reviews Dashboard
+# Property Reviews Dashboard
 
 ## Introduction
 
